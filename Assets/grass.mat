@@ -131,7 +131,7 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
-    - _animspeed: 0.4
+    - _animspeed: 0.65
     - _flipped: 0
     - _offsetworldpos: 1
     m_Colors:

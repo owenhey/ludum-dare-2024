@@ -20,14 +20,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: tree
-  m_Shader: {fileID: -6465566751694194690, guid: c02e5b5e6c7cf1a4388e68ef6ef22050, type: 3}
+  m_Name: border box
+  m_Shader: {fileID: -6465566751694194690, guid: bb148476cbe55a74c9379ee8114b01f6, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -82,7 +82,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _maintex:
-        m_Texture: {fileID: 2800000, guid: 3305a16adb22dad408cbac15c00a60d9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 4e1fd5dd0b3d2bc4e9224487e4211124, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -131,13 +131,16 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
-    - _animspeed: 0.7
+    - _animspeed: 0.5
+    - _factor: 0.11
     - _flipped: 0
-    - _offsetworldpos: 1
+    - _letter: 3.9
+    - _offsetworldpos: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _color: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

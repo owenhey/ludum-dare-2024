@@ -36,6 +36,7 @@ public class BasicAnimator : MonoBehaviour {
         }
         AssignAnim(Run);
         float dot = Vector3.Dot(vel, camRight);
+        if (Mathf.Abs(dot) < .01f) return;
         SetFlip(dot < 0 ? 1 : 0);
     }
 

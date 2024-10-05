@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class LookTowardsCam : MonoBehaviour {
     public Transform Cam;
+    public bool LookUp;
     
     private void LateUpdate() {
         Vector3 towardsCamera = Cam.position - transform.position;
 
-        towardsCamera.y = 0;
+        if(!LookUp)
+            towardsCamera.y = 0;
         transform.LookAt(transform.position + towardsCamera);
     }
 
