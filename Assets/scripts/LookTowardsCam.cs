@@ -12,8 +12,8 @@ public class LookTowardsCam : MonoBehaviour {
 
     private void Reset() {
         Cam = Camera.main.transform;
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(gameObject);
-        #endif
+#endif
     }
 }
