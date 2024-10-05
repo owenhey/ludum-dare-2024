@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8477693464399387005}
   - component: {fileID: 8133714172373058101}
   m_Layer: 0
-  m_Name: Grass
+  m_Name: Small grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,7 +111,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d423ca65c411ced4da302eb0150a96f3, type: 2}
+  - {fileID: 2100000, guid: b32ac03c92e658f40bfdf38d6a19c74d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -161,7 +161,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.0000005215406, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.027, y: -0, z: -0.036}
-  m_LocalScale: {x: 0.06, y: 0.06, z: 0.06}
+  m_LocalScale: {x: 0.04, y: 0.04, z: 0.04}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8477693464399387005}
