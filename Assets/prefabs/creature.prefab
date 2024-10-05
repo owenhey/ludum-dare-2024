@@ -97,9 +97,10 @@ GameObject:
   - component: {fileID: 4705630086770409195}
   - component: {fileID: 5924655228546239851}
   - component: {fileID: 7333915484363462515}
-  - component: {fileID: 224462555673832670}
   - component: {fileID: 9037648972594610403}
   - component: {fileID: 8632113697359073276}
+  - component: {fileID: 6800143613101393564}
+  - component: {fileID: 5087201702155033318}
   m_Layer: 0
   m_Name: creature
   m_TagString: Untagged
@@ -153,29 +154,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   token: {fileID: 6515265128323142076}
   Minigame: {fileID: 8632113697359073276}
---- !u!136 &224462555673832670
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2145160140056677875}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
+  Char: 0
+  lookingForPlayer: 1
+  CC: {fileID: 5087201702155033318}
+  speed: 3
+  TreesAndRocks:
     serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.2
-  m_Height: 3
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+    m_Bits: 128
+  FollowTarget: {fileID: 0}
+  FollowDistance: 0.4
 --- !u!135 &9037648972594610403
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -212,6 +199,51 @@ MonoBehaviour:
   Creature: {fileID: 7333915484363462515}
   GoodColor: {r: 0.3378072, g: 0.7075472, b: 0.27033645, a: 1}
   BadColor: {r: 0.754717, g: 0.23851903, b: 0.23851903, a: 1}
+--- !u!114 &6800143613101393564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145160140056677875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc86085a57824831aec72b47724d87fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MR: {fileID: 818250659035890788}
+  Cam: {fileID: 0}
+  Idle:
+    Texture: {fileID: 2800000, guid: c529e556017cfa546a7792f733e67e31, type: 3}
+    AnimTime: 0.5
+  Run:
+    Texture: {fileID: 2800000, guid: b3cb40da55f6e8547a2763cdfe6b449a, type: 3}
+    AnimTime: 0.25
+--- !u!143 &5087201702155033318
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145160140056677875}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 3
+  m_Radius: 0.25
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.51, z: 0}
 --- !u!1 &3189294503815902466
 GameObject:
   m_ObjectHideFlags: 0

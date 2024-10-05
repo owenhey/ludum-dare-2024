@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour {
@@ -12,17 +14,24 @@ public class Movement : MonoBehaviour {
     private Vector3 _vel;
 
     public static bool Interacting = false;
-    
+
+    public List<Creature> CreaturesFollowing = new();
+
+    public static Movement Player;
+
+    private void Awake() {
+        Player = this;
+    }
+
     private void Update() {
+        if (Interacting) return;
+        
         if (Input.GetKeyDown(KeyCode.Space)) {
             if (Creature.Nearest != null) {
                 Interacting = true;
                 Creature.Nearest.InteractWith();
             }
         }
-        
-        
-        if (Interacting) return;
         
         bool isDirectingToMove = Input.GetKey(KeyCode.Mouse0);
         if (isDirectingToMove) {

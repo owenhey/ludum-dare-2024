@@ -23,9 +23,18 @@ public class Words : ScriptableObject {
     public string GetRandom() {
         return words[Random.Range(0, words.Count)];
     }
+
+    public string GetRandom(int maxPopularity, int minLength, int maxLength) {
+        string s;
+        do {
+            s = words[Random.Range(0, maxPopularity)];
+        } while (s.Length > maxLength || s.Length < minLength);
+
+        return s;
+    }
     
     private void Generate() {
-        words = new(100000);
+        words = new(60720);
         string content = file.text;
         
         string[] lines = file.text.Split('\n');

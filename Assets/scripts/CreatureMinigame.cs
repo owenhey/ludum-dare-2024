@@ -10,26 +10,27 @@ public class CreatureMinigame : MonoBehaviour {
     public Color GoodColor;
     public Color BadColor;
 
-    public void StartMinigame() {
+    private RenderWord _renderWord;
+
+    public void StartMinigame(RenderWord renderWord) {
+        _renderWord = renderWord;
         Movement.Interacting = true;
         StartCoroutine(Minigame());
     }
 
     private IEnumerator Minigame() {
-        int numWords = 3;
+        int numWords = 1;
         for (int i = 0; i < numWords; i++) {
             currentWord = GenerateWord();
             currentIndex = 0;
-            RenderWord.Instance.transform.position = Creature.transform.position + Vector3.up;
-            RenderWord.Instance.ShowWord(currentWord, BadColor);
+            
+            _renderWord.ShowWord(currentWord, BadColor);
 
             yield return new WaitForSeconds(.1f);
-            
             yield return new WaitUntil(Finished);
         }
-
-        Creature.lookingForPlayer = false;
-        StopMinigame();
+        
+        WinMinigame();
     }
 
     private void LookForInput() {
@@ -83,12 +84,12 @@ public class CreatureMinigame : MonoBehaviour {
             bool gotToLetterYet = i < currentIndex;
             tokens[i] = new TokenData(currentWord[i], gotToLetterYet ? GoodColor : BadColor, false);
         }
-        RenderWord.Instance.ShowWord(tokens);
+        _renderWord.ShowWord(tokens);
     }
 
     private void WrongInput() {
         currentIndex = 0;
-        RenderWord.Instance.Shake();
+        _renderWord.Shake();
         UpdateWithProgress();
     }
 
@@ -97,19 +98,31 @@ public class CreatureMinigame : MonoBehaviour {
     }
 
     private string GenerateWord() {
-        return Words.Instance.GetRandom();
+        return Words.Instance.GetRandom(3000, 4, 8);
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            StopMinigame();
+            CancelMinigame();
         }
 
         LookForInput();
     }
 
-    public void StopMinigame() {
+    private void WinMinigame() {
         enabled = false;
         Movement.Interacting = false;
+        _renderWord.gameObject.SetActive(false);
+        Creature.LitteHop();
+
+        Creature.FollowPlayer();
+    }
+
+    public void CancelMinigame() {
+        enabled = false;
+        Movement.Interacting = false;
+        _renderWord.gameObject.SetActive(false);
+        Creature.lookingForPlayer = true;
+        Creature.ForceNearest();
     }
 }

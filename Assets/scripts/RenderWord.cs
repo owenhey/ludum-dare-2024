@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -18,17 +19,33 @@ public class RenderWord : MonoBehaviour {
     public float SpaceBetween = .5f;
     public List<RenderToken> TokenElements;
     public SpriteRenderer SR;
+    public Transform Content;
 
-    public static RenderWord Instance;
+    private Transform FollowTrans;
+    private Vector3 offset;
 
-    public void Awake() {
-        Instance = this;
-    }
 
     public void Shake() {
-        transform.DOShakePosition(.3f, .1f, 30);
+        Content.DOKill();
+        Content.DOShakePosition(.3f, .1f, 30);
     }
-    
+
+    public void SetFollow(Transform t, Vector3 o) {
+        FollowTrans = t;
+        offset = o;
+        if (t != null) transform.position = FollowTrans.position + o;
+    }
+
+    private void LateUpdate() {
+        if (FollowTrans) {
+            transform.position = FollowTrans.position + offset;
+        }
+    }
+
+    private void OnDisable() {
+        FollowTrans = null;
+    }
+
     public void ShowWord(string word) {
         List<TokenData> tokens = new List<TokenData>(word.Length);
         for (int i = 0; i < word.Length; i++) {

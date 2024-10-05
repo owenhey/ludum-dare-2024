@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8133714172373058101}
   - component: {fileID: 603523770564614621}
   - component: {fileID: 392700088729138448}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cam: {fileID: 0}
+  LookUp: 0
 --- !u!136 &603523770564614621
 CapsuleCollider:
   m_ObjectHideFlags: 0
