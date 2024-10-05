@@ -33,6 +33,20 @@ public class Words : ScriptableObject {
         return s;
     }
     
+    public string GetRandom(int maxPopularity, int minLength, int maxLength, char requiredStartLetter) {
+        bool allowAppearance = requiredStartLetter is 'z' or 'x';
+        maxPopularity *= allowAppearance ? 3 : 1;
+        string s;
+        do {
+            s = words[Random.Range(0, maxPopularity)];
+            if (allowAppearance) {
+                if (s.Length <= maxLength && s.Length >= minLength && s.Contains(requiredStartLetter)) break;
+            }
+        } while (s.Length > maxLength || s.Length < minLength || s[0] != requiredStartLetter);
+
+        return s;
+    }
+    
     private void Generate() {
         words = new(60720);
         string content = file.text;

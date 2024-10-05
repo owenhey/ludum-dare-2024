@@ -24,11 +24,12 @@ public class Movement : MonoBehaviour {
     }
 
     private void Update() {
+        if(Input.GetKeyDown(KeyCode.Q)) Fader.instance.FadeWithFunction(null);
+        
         if (Interacting) return;
         
         if (Input.GetKeyDown(KeyCode.Space)) {
             if (Creature.Nearest != null) {
-                Interacting = true;
                 Creature.Nearest.InteractWith();
             }
         }

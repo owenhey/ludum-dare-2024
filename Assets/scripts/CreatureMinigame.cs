@@ -19,7 +19,7 @@ public class CreatureMinigame : MonoBehaviour {
     }
 
     private IEnumerator Minigame() {
-        int numWords = 1;
+        int numWords = 2;
         for (int i = 0; i < numWords; i++) {
             currentWord = GenerateWord();
             currentIndex = 0;
@@ -98,7 +98,7 @@ public class CreatureMinigame : MonoBehaviour {
     }
 
     private string GenerateWord() {
-        return Words.Instance.GetRandom(3000, 4, 8);
+        return Words.Instance.GetRandom(3000, 4, 8, Creature.Char);
     }
 
     private void Update() {
@@ -114,12 +114,14 @@ public class CreatureMinigame : MonoBehaviour {
         Movement.Interacting = false;
         _renderWord.gameObject.SetActive(false);
         Creature.LitteHop();
+        StopAllCoroutines();
 
         Creature.FollowPlayer();
     }
 
     public void CancelMinigame() {
         enabled = false;
+        StopAllCoroutines();
         Movement.Interacting = false;
         _renderWord.gameObject.SetActive(false);
         Creature.lookingForPlayer = true;

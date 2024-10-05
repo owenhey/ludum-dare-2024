@@ -98,8 +98,8 @@ public class Creature : MonoBehaviour {
 
     public void InteractWith() {
         if (Minigame.enabled) return;
-        
-        
+        if (!lookingForPlayer) return;
+
         Minigame.enabled = true;
         lookingForPlayer = false;
         Minigame.StartMinigame(renderWord);
