@@ -1,5 +1,18 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+
+public struct TokenData {
+    public char C;
+    public Color Color;
+    public bool Animate;
+
+    public TokenData(char c, Color color, bool animate) {
+        C = c;
+        Color = color;
+        Animate = animate;
+    }
+}
 
 public class RenderWord : MonoBehaviour {
     public float SpaceBetween = .5f;
@@ -11,31 +24,43 @@ public class RenderWord : MonoBehaviour {
     public void Awake() {
         Instance = this;
     }
+
+    public void Shake() {
+        transform.DOShakePosition(.3f, .1f, 30);
+    }
     
-    private void Start() {
-        ShowWord(new int[]{0, 1, 2, 3});
+    public void ShowWord(string word) {
+        List<TokenData> tokens = new List<TokenData>(word.Length);
+        for (int i = 0; i < word.Length; i++) {
+            tokens.Add(new TokenData(word[i], RenderToken.DefaultColor, true));
+        }
+        ShowWord(tokens.ToArray());
+    }
+    
+    public void ShowWord(string word, Color c) {
+        List<TokenData> tokens = new List<TokenData>(word.Length);
+        for (int i = 0; i < word.Length; i++) {
+            tokens.Add(new TokenData(word[i], c, true));
+        }
+        ShowWord(tokens.ToArray());
     }
 
-    public void ShowWord(string word) {
-        List<int> ints = new List<int>(word.Length);
-        for (int i = 0; i < word.Length; i++) {
-            ints.Add(word[i] - 'a');
-        }
-        ShowWord(ints.ToArray());
-    }
-    
-    public void ShowWord(int[] tokens) {
+    public void ShowWord(TokenData[] tokens) {
         EnsureEnoughElements(tokens.Length);
         
         float xStart = ((tokens.Length - 1) / 2.0f) * SpaceBetween;
         for (int i = 0; i < Mathf.Max(tokens.Length, TokenElements.Count); i++) {
             bool show = i < tokens.Length;
             TokenElements[i].gameObject.SetActive(show);
-            if (!show) return;
+            TokenElements[i].transform.DOKill();
+            if (!show) continue;
 
             TokenElements[i].transform.localPosition = new Vector3(xStart - (SpaceBetween * i), 0, 0);
-            TokenElements[i].ShowLetter(tokens[i], (i + 1) * .1f);
-            TokenElements[i].ShowColor(new Color(.1f, .1f, .1f));
+            TokenElements[i].ShowLetter(tokens[i].C);
+            TokenElements[i].ShowColor(tokens[i].Color);
+            TokenElements[i].transform.localScale = Vector3.one * .03f;
+            if(tokens[i].Animate)
+                TokenElements[i].transform.DOScale(.03f, .1f).SetDelay((i + 1) * .05f).From(0);
         }
 
         SR.size = new Vector2(SpaceBetween * tokens.Length + .5f, SR.size.y);

@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 7333915484363462515}
   - component: {fileID: 224462555673832670}
   - component: {fileID: 9037648972594610403}
+  - component: {fileID: 8632113697359073276}
   m_Layer: 0
   m_Name: creature
   m_TagString: Untagged
@@ -151,6 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   token: {fileID: 6515265128323142076}
+  Minigame: {fileID: 8632113697359073276}
 --- !u!136 &224462555673832670
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -195,6 +197,21 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8632113697359073276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145160140056677875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c3a77975199428a9589cb7ccaa1fcd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Creature: {fileID: 7333915484363462515}
+  GoodColor: {r: 0.3378072, g: 0.7075472, b: 0.27033645, a: 1}
+  BadColor: {r: 0.754717, g: 0.23851903, b: 0.23851903, a: 1}
 --- !u!1 &3189294503815902466
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,21 +10,28 @@ public class RenderToken : MonoBehaviour {
 
     private float _delay = 0;
 
-    private void OnEnable() {
-        transform.DOKill();
-        transform.DOScale(.03f, .1f).From(0).SetDelay(_delay);
-    }
+    public static Color DefaultColor = new Color(.1f, .1f, .1f);
 
-    public void ShowLetter(int index, float delay = 0) {
+    public void ShowLetter(char c, float delay = 0) {
         _delay = delay;
         if (!_copiedMat) {
             _tokenMat = new Material(TokenMR.sharedMaterial);
             TokenMR.material = _tokenMat;
         }
-        _tokenMat.SetFloat("_letter", index + .1f);
+        _tokenMat.SetFloat("_letter", GetIndexFromLetter(c) + .1f);
     }
 
     public void ShowColor(Color c) {
         _tokenMat.SetColor("_color", c);
+    }
+
+    private int GetIndexFromLetter(char c) {
+        if (c >= 'a' && c <= 'z') {
+            return c - 'a';
+        }
+
+        if (c == '!') return 26;
+
+        throw new ArgumentException("char inputted was not valid");
     }
 }
