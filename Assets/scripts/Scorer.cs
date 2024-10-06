@@ -63,7 +63,7 @@ public class Scorer {
         return ret;
     }
 
-    private static bool IsConsonent(char c) {
+    public static bool IsConsonent(char c) {
         if (c == 'a') return false;
         else if (c == 'b') return true;
         else if (c == 'c') return true;

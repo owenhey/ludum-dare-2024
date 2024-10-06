@@ -4,6 +4,12 @@ using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+public enum CharGenType {
+    None,
+    Vowel,
+    Consonant,
+}
+
 public class Creature : MonoBehaviour {
     public RenderToken token;
     public CreatureMinigame Minigame;
@@ -38,16 +44,67 @@ public class Creature : MonoBehaviour {
     public bool CanRelease = true;
 
     public static bool SentAwayThisRound = false;
+
+    public CharGenType genType;
     
     
     private void Start() {
-        Char = (char)('a' + Random.Range(0, 25));
+        Char = GenChar();
         token.ShowLetter(Char);
 
         Minigame.enabled = false;
         startLocation = transform.position;
         StartCoroutine(WanderCoroutine());
         FollowDistance *= Random.Range(.65f, 1.3f);
+    }
+
+    private static char[] genLetters = new[] {
+        'a', 'a', 'a', 'a',
+        'b',
+        'c',
+        'd', 'd',
+        'e', 'e', 'e', 'e', 'e',
+        'f',
+        'g', 'g',
+        'h',
+        'i', 'i', 'i', 'i',
+        'j',
+        'k',
+        'l', 'l',
+        'm', 'm',
+        'n', 'n', 'n',
+        'o','o','o',
+        'p',
+        'q',
+        'r','r',
+        's','s','s',
+        't',
+        'u','u','u',
+        'v',
+        'w',
+        'x',
+        'y',
+        'z'
+    };
+
+    private char GenChar() {
+        char c = (char)('a' + Random.Range(0, 26));
+        switch (genType) {
+            case CharGenType.None:
+                return genLetters[Random.Range(0, genLetters.Length)];
+            case CharGenType.Vowel:
+                while (Scorer.IsConsonent(c)) {
+                    c = (char)('a' + Random.Range(0, 26));
+                }
+                return c;
+            case CharGenType.Consonant:
+                while (!Scorer.IsConsonent(c)) {
+                    c = (char)('a' + Random.Range(0, 26));
+                }
+                return c;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     private IEnumerator WanderCoroutine() {
@@ -59,7 +116,7 @@ public class Creature : MonoBehaviour {
             while (true) {
                 // Make sure no trees are nearby
                 var randomCircle = Random.insideUnitCircle;
-                target = startLocation + new Vector3(randomCircle.x, 0, randomCircle.y) * 2;
+                target = startLocation + new Vector3(randomCircle.x, 0, randomCircle.y) * 1.5f;
                 int numHit = Physics.OverlapSphereNonAlloc(target, 1, results, TreesAndRocks);
                 if(Vector3.SqrMagnitude(transform.position - target) < 2.0f) continue;
                 if (numHit == 0) break;

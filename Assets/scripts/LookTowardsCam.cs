@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LookTowardsCam : MonoBehaviour {
@@ -12,6 +13,14 @@ public class LookTowardsCam : MonoBehaviour {
         if(!LookUp)
             towardsCamera.y = 0;
         transform.LookAt(transform.position + towardsCamera);
+    }
+
+    private void OnBecameInvisible() {
+        enabled = false;
+    }
+    
+    private void OnBecameVisible() {
+        enabled = true;
     }
 
     private void Reset() {

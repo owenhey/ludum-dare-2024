@@ -18,9 +18,13 @@ public class Movement : MonoBehaviour {
     public List<Creature> CreaturesFollowing = new();
 
     public static Movement Player;
+    private static readonly int Worldpos = Shader.PropertyToID("_worldpos");
 
     private void Awake() {
         Player = this;
+        Shader.SetGlobalFloat("_minFog", 15);
+        Shader.SetGlobalFloat("_maxFog", 15.5f);
+        Shader.SetGlobalVector(Worldpos, Vector3.zero);
     }
 
     public void Warp(Vector3 pos) {
@@ -63,6 +67,7 @@ public class Movement : MonoBehaviour {
     }
 
     private void MoveTowards(Vector3 hitpoint) {
+        hitpoint = Vector3.ClampMagnitude(hitpoint, 14);
         Vector3 targetPos = Vector3.SmoothDamp(transform.position, hitpoint, ref _vel, Damping, Speed);
         Vector3 torwards = targetPos - transform.position;
         CC.Move(torwards);

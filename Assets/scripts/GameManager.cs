@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
 
     public Movement movement;
     public Creature CreaturePrefab;
+    public CreatureSpawner CreatureSpawner;
 
     public Transform CreatureTargetParent;
 
@@ -40,7 +41,10 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < numCreatures; i++) {
             var newcreature = Instantiate(CreaturePrefab, -Vector3.forward * (i + 1), quaternion.identity);
             newcreature.FollowPlayer();
+            newcreature.genType = i == 0 ? CharGenType.Vowel : CharGenType.Consonant;
         }
+        
+        CreatureSpawner.Spawn();
     }
 
     public void FinishCollection() {
@@ -50,6 +54,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SwitchToMakingWord() {
+        CreatureSpawner.DestroyUncollectedCreatures();
         typing = false;
         movement.Warp(Vector3.zero);
         LettersNotUsed = 0;
@@ -181,8 +186,6 @@ public class GameManager : MonoBehaviour {
 
         currentEntered += entered;
         availableLetters = availableLetters.Remove(availableLetters.IndexOf(entered), 1);
-        
-        Debug.Log($"available letters: {availableLetters}");
         
         RefreshShowing();
     }

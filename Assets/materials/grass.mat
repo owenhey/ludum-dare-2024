@@ -133,6 +133,8 @@ Material:
     - _ZWrite: 1
     - _animspeed: 0.65
     - _flipped: 0
+    - _maxFog: 15
+    - _minFog: 10
     - _offsetworldpos: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

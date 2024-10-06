@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8477693464399387005}
   - component: {fileID: 8133714172373058101}
   m_Layer: 0
-  m_Name: Small grass
+  m_Name: rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 7715916736968448529}
   - component: {fileID: 5827726873660418683}
   m_Layer: 0
-  m_Name: Grass
+  m_Name: rockk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,8 +75,8 @@ Transform:
   m_GameObject: {fileID: 5743477542954659871}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071069}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalPosition: {x: 0, y: 0.15, z: 0}
+  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8477693464399387005}
@@ -112,7 +112,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b32ac03c92e658f40bfdf38d6a19c74d, type: 2}
+  - {fileID: 2100000, guid: 587bbc53653d1e54585e20a396f698f1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -161,8 +161,8 @@ Transform:
   m_GameObject: {fileID: 6409276480896417623}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0000005215406, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.008, y: 0, z: -0.017}
-  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
+  m_LocalPosition: {x: 0.0022, y: -0, z: -0.013}
+  m_LocalScale: {x: 0.05151369, y: 0.013070586, z: 0.013070586}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8477693464399387005}
