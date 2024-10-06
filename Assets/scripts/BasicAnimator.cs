@@ -21,6 +21,8 @@ public class BasicAnimator : MonoBehaviour {
     }
 
     private void Update() {
+        if (!Cam) Cam = Camera.main.transform;
+        
         Vector3 camRight = Cam.right;
         camRight.y = 0;
 

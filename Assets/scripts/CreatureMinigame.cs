@@ -19,7 +19,7 @@ public class CreatureMinigame : MonoBehaviour {
     }
 
     private IEnumerator Minigame() {
-        int numWords = 2;
+        int numWords = 3;
         for (int i = 0; i < numWords; i++) {
             currentWord = GenerateWord();
             currentIndex = 0;

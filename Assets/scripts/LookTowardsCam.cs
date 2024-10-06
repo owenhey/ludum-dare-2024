@@ -5,6 +5,8 @@ public class LookTowardsCam : MonoBehaviour {
     public bool LookUp;
     
     private void LateUpdate() {
+        if (!Cam) Cam = Camera.main.transform;
+        
         Vector3 towardsCamera = Cam.position - transform.position;
 
         if(!LookUp)

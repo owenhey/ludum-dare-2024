@@ -36,6 +36,13 @@ public class Words : ScriptableObject {
     public string GetRandom(int maxPopularity, int minLength, int maxLength, char requiredStartLetter) {
         bool allowAppearance = requiredStartLetter is 'z' or 'x';
         maxPopularity *= allowAppearance ? 3 : 1;
+
+        if (requiredStartLetter == 'y') maxPopularity *= 3;
+        if (requiredStartLetter == 'q') maxPopularity *= 3;
+        if (requiredStartLetter == 'j') maxPopularity *= 3;
+        if (requiredStartLetter == 'v') maxPopularity *= 3;
+        if (requiredStartLetter == 'k') maxPopularity *= 3;
+        
         string s;
         do {
             s = words[Random.Range(0, maxPopularity)];
@@ -48,13 +55,16 @@ public class Words : ScriptableObject {
     }
     
     private void Generate() {
-        words = new(60720);
+        words = new(390025);
         string content = file.text;
         
         string[] lines = file.text.Split('\n');
         foreach (string line in lines) {
             if(string.IsNullOrEmpty(line)) continue;
             bool notvalid = false;
+            if (line.Length < 4) {
+                continue;
+            }
             foreach (char c in line) {
                 if ((c < 'a' || c > 'z') && c != 13) {
                     notvalid = true;
@@ -65,5 +75,10 @@ public class Words : ScriptableObject {
         }
         
         Debug.Log("words length: " + words.Count);
+    }
+
+    public int GetRarity(string word) {
+        int indexOf = words.IndexOf(word);
+        return indexOf;
     }
 }

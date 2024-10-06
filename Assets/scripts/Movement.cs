@@ -23,6 +23,12 @@ public class Movement : MonoBehaviour {
         Player = this;
     }
 
+    public void Warp(Vector3 pos) {
+        CC.enabled = false;
+        transform.position = pos;
+        CC.enabled = true;
+    }
+
     private void Update() {
         if(Input.GetKeyDown(KeyCode.Q)) Fader.instance.FadeWithFunction(null);
         

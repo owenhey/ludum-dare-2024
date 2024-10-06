@@ -54,6 +54,14 @@ public class RenderWord : MonoBehaviour {
         ShowWord(tokens.ToArray());
     }
     
+    public void ShowWord(string word, bool animate) {
+        List<TokenData> tokens = new List<TokenData>(word.Length);
+        for (int i = 0; i < word.Length; i++) {
+            tokens.Add(new TokenData(word[i], RenderToken.DefaultColor, animate));
+        }
+        ShowWord(tokens.ToArray());
+    }
+    
     public void ShowWord(string word, Color c) {
         List<TokenData> tokens = new List<TokenData>(word.Length);
         for (int i = 0; i < word.Length; i++) {

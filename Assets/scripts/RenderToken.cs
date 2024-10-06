@@ -31,6 +31,7 @@ public class RenderToken : MonoBehaviour {
         }
 
         if (c == '!') return 26;
+        if (c == ' ') return 27;
 
         throw new ArgumentException("char inputted was not valid");
     }

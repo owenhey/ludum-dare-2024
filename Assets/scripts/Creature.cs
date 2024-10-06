@@ -34,6 +34,10 @@ public class Creature : MonoBehaviour {
 
     public Transform FollowTarget;
     public float FollowDistance;
+
+    public bool CanRelease = true;
+
+    public static bool SentAwayThisRound = false;
     
     
     private void Start() {
@@ -90,8 +94,14 @@ public class Creature : MonoBehaviour {
         Vector3 targetPos = Vector3.SmoothDamp(transform.position, FollowTarget.position + towardsMe, ref _vel, .15f, speed);
 
         Vector3 torwards = targetPos - transform.position;
-        if (Vector3.SqrMagnitude(FollowTarget.position - transform.position) < .1f) {
+        if (Char == 's') {
+            Debug.Log(_vel.sqrMagnitude + " " + Vector3.SqrMagnitude((FollowTarget.position + towardsMe) - transform.position));
+        }
+        if (_vel.sqrMagnitude < .1f && Vector3.SqrMagnitude((FollowTarget.position + towardsMe) - transform.position) < .1f) {
             return;
+        }
+        if (Char == 's') {
+            Debug.Log("MOVING");
         }
         CC.Move(torwards);
     }
@@ -105,6 +115,11 @@ public class Creature : MonoBehaviour {
         Minigame.StartMinigame(renderWord);
     }
 
+    public void RemoveLetter() {
+        LitteHop();
+        token.gameObject.SetActive(false);
+    }
+
     public void ForceNearest() {
         Nearest = this;
         renderWord = RenderWordsPool.Get();
@@ -112,19 +127,25 @@ public class Creature : MonoBehaviour {
         renderWord.SetFollow(transform, Vector3.up);
         renderWord.ShowWord("!");
     }
+    
+    public void Warp(Vector3 pos) {
+        CC.enabled = false;
+        transform.position = pos;
+        CC.enabled = true;
+    }
 
     public void ForceHide() {
         renderWord.gameObject.SetActive(false);
     }
 
     public void LitteHop() {
-        
         transform.DOMoveY(transform.position.y + .5f, .15f).SetEase(Ease.OutQuad).OnComplete(() => {
             transform.DOMoveY(0, .15f).SetEase(Ease.InQuad);
         });
     }
     
     public void FollowPlayer() {
+        lookingForPlayer = false;
         if (Movement.Player.CreaturesFollowing.Count == 0) {
             FollowTarget = Movement.Player.transform;
         }
@@ -132,6 +153,33 @@ public class Creature : MonoBehaviour {
             FollowTarget = Movement.Player.CreaturesFollowing[^1].transform;
         }
         Movement.Player.CreaturesFollowing.Add(this);
+    }
+    
+    public void StopFollowing() {
+        if (FollowTarget == null) return;
+        if (!CanRelease) return;
+        
+        LitteHop();
+
+        SentAwayThisRound = true;
+        lookingForPlayer = true;
+        hasTarget = false;
+
+        Transform previousTarget = FollowTarget;
+        FollowTarget = null;
+        startLocation = transform.position;
+        
+        // go thru and readjust follows
+        var followingList = Movement.Player.CreaturesFollowing;
+        int playerFollowIndex = followingList.IndexOf(this);
+        
+        followingList.RemoveAt(playerFollowIndex);
+
+        if (followingList.Count <= playerFollowIndex) {
+            return;
+        }
+
+        followingList[playerFollowIndex].FollowTarget = previousTarget;
     }
 
     public void OnTriggerEnter(Collider other) {

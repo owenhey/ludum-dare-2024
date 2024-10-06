@@ -37,14 +37,14 @@ public class Fader : MonoBehaviour {
     public void ShowFade() {
         for (int i = 0; i < fades.Length; i++) {
             var fade = fades[i];
-            fade.RT.DOAnchorPos(fade.posShowing, .75f).SetDelay(fade.Delay).SetEase(Ease.Linear);
+            fade.RT.DOAnchorPos(fade.posShowing, .5f).SetDelay(fade.Delay).SetEase(Ease.Linear);
         }
     }
 
     public void HideFade() {
         for (int i = 0; i < fades.Length; i++) {
             var fade = fades[i];
-            fade.RT.DOAnchorPos(fade.posHidden, .75f).SetDelay(1.5f - fade.Delay).SetEase(Ease.Linear);
+            fade.RT.DOAnchorPos(fade.posHidden, .5f).SetDelay(1.5f - fade.Delay).SetEase(Ease.Linear);
         }
     }
 }

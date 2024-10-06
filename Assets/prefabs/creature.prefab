@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 3010474587739400758}
   - component: {fileID: 4071092074564956453}
   - component: {fileID: 818250659035890788}
-  m_Layer: 0
+  - component: {fileID: 4283052482455417401}
+  m_Layer: 8
   m_Name: creature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +87,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &4283052482455417401
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817575471918057289}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10.000001, y: 0.2, z: 10.000004}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2145160140056677875
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,7 +123,7 @@ GameObject:
   - component: {fileID: 8632113697359073276}
   - component: {fileID: 6800143613101393564}
   - component: {fileID: 5087201702155033318}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: creature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +184,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   FollowTarget: {fileID: 0}
-  FollowDistance: 0.4
+  FollowDistance: 0.8
+  CanRelease: 1
 --- !u!135 &9037648972594610403
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -238,7 +261,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 3
-  m_Radius: 0.25
+  m_Radius: 0.1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -256,7 +279,7 @@ GameObject:
   - component: {fileID: 4092177674714514071}
   - component: {fileID: 8165179688324950081}
   - component: {fileID: 6515265128323142076}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: letter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +378,7 @@ GameObject:
   - component: {fileID: 4958118771406571865}
   - component: {fileID: 5707363867200878415}
   - component: {fileID: 8512456151047452184}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
