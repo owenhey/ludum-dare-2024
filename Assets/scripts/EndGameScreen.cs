@@ -35,7 +35,6 @@ public class EndGameScreen : MonoBehaviour {
     }
     
     public void EndGame(string word) {
-        word = "segregation";
         StartCoroutine(EndGameC(word));
     }
 
@@ -47,23 +46,23 @@ public class EndGameScreen : MonoBehaviour {
 
         ScoreData score = Scorer.Score(word);
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(.6f);
         lengthScore.CountUpTo(score.lengthScore);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(.6f);
         rarityScore.CountUpTo(score.rarityScore);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(.6f);
         scrabbleScore.CountUpTo(score.scrabbleScore);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(.6f);
         consonentsScore.CountUpTo(score.consonentsScore);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(.6f);
         uniqueLettersScore.CountUpTo(score.uniqueLettersScore);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(.6f);
         keepAllLettersScore.CountUpTo(score.keepAllLettersScore);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(.6f);
         palindromeScore.CountUpTo(score.palindromeScore);
-        yield return new WaitForSeconds(1.0f);
-        palindromeScore.CountUpTo(score.palindromeScore);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.6f);
+        useAllLettersScore.CountUpTo(score.useAllLettersScore);
+        yield return new WaitForSeconds(.6f);
         totalScore.CountUpTo(score.total);
         yield return new WaitForSeconds(1.5f);
 

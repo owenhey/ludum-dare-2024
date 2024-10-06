@@ -10,7 +10,7 @@ public enum CharGenType {
     Consonant,
 }
 
-public class Creature : MonoBehaviour {
+public class Creature : MonoBehaviour, Interactable {
     public RenderToken token;
     public CreatureMinigame Minigame;
 
@@ -21,8 +21,6 @@ public class Creature : MonoBehaviour {
     public char Char;
 
     public bool lookingForPlayer = true;
-
-    private RenderWord renderWord;
 
     public CharacterController CC;
 
@@ -46,7 +44,7 @@ public class Creature : MonoBehaviour {
     public static bool SentAwayThisRound = false;
 
     public CharGenType genType;
-    
+    public Transform jumper;
     
     private void Start() {
         Char = GenChar();
@@ -98,7 +96,7 @@ public class Creature : MonoBehaviour {
                 }
                 return c;
             case CharGenType.Consonant:
-                while (!Scorer.IsConsonent(c)) {
+                while (!Scorer.IsConsonent(c) || c=='x' || c=='z' || c=='q') {
                     c = (char)('a' + Random.Range(0, 26));
                 }
                 return c;
@@ -126,6 +124,11 @@ public class Creature : MonoBehaviour {
         }
     }
 
+    public Vector3 GetPosition() => transform.position;
+    public Vector3 GetWordDisplayPosition() => transform.position + Vector3.up;
+
+    public string GetWord() => "!";
+
     private void Update() {
         if (FollowTarget) {
             GoTowardsTarg();
@@ -151,25 +154,26 @@ public class Creature : MonoBehaviour {
         Vector3 targetPos = Vector3.SmoothDamp(transform.position, FollowTarget.position + towardsMe, ref _vel, .15f, speed);
 
         Vector3 torwards = targetPos - transform.position;
-        if (Char == 's') {
-            Debug.Log(_vel.sqrMagnitude + " " + Vector3.SqrMagnitude((FollowTarget.position + towardsMe) - transform.position));
-        }
         if (_vel.sqrMagnitude < .1f && Vector3.SqrMagnitude((FollowTarget.position + towardsMe) - transform.position) < .1f) {
             return;
-        }
-        if (Char == 's') {
-            Debug.Log("MOVING");
         }
         CC.Move(torwards);
     }
 
+    public System.Action GetCallback() => InteractWith;
+
     public void InteractWith() {
         if (Minigame.enabled) return;
         if (!lookingForPlayer) return;
+        if (Movement.Player.CreaturesFollowing.Count > 12) {
+            Movement.Player.ShowOverhead("too long!");
+            Movement.Interacting = false;
+            return;
+        }
 
         Minigame.enabled = true;
         lookingForPlayer = false;
-        Minigame.StartMinigame(renderWord);
+        Minigame.StartMinigame();
     }
 
     public void RemoveLetter() {
@@ -177,31 +181,24 @@ public class Creature : MonoBehaviour {
         token.gameObject.SetActive(false);
     }
 
-    public void ForceNearest() {
-        Nearest = this;
-        renderWord = RenderWordsPool.Get();
-        renderWord.gameObject.SetActive(true);
-        renderWord.SetFollow(transform, Vector3.up);
-        renderWord.ShowWord("!");
-    }
-    
     public void Warp(Vector3 pos) {
         CC.enabled = false;
         transform.position = pos;
         CC.enabled = true;
     }
 
-    public void ForceHide() {
-        renderWord.gameObject.SetActive(false);
-    }
-
     public void LitteHop() {
-        transform.DOMoveY(transform.position.y + .5f, .15f).SetEase(Ease.OutQuad).OnComplete(() => {
-            transform.DOMoveY(0, .15f).SetEase(Ease.InQuad);
+        jumper.DOMoveY(transform.position.y + .5f, .15f).SetEase(Ease.OutQuad).OnComplete(() => {
+            jumper.DOMoveY(0, .15f).SetEase(Ease.InQuad);
         });
     }
     
+    public void Shake() {
+        jumper.DOShakePosition(.25f, .2f, 30);
+    }
+    
     public void FollowPlayer() {
+        InteractionManager.Instance.UnregisterInteractable(this);
         lookingForPlayer = false;
         if (Movement.Player.CreaturesFollowing.Count == 0) {
             FollowTarget = Movement.Player.transform;
@@ -243,31 +240,15 @@ public class Creature : MonoBehaviour {
         if(!lookingForPlayer) return;
         
         if (other.CompareTag("Player")) {
-            if (Nearest != this && Nearest != null) {
-                Nearest.ForceHide();
-            }
-            Nearest = this;
-            renderWord = RenderWordsPool.Get();
-            renderWord.gameObject.SetActive(true);
-            renderWord.SetFollow(transform, Vector3.up);
-            renderWord.ShowWord("!");
+            InteractionManager.Instance.RegisterInteractable(this);
         }
-    }
-
-    private void OnDrawGizmos() {
-        Gizmos.color = new Color(.5f, .5f, .5f, .5f);
-        Gizmos.DrawSphere(transform.position, 2.0f);
     }
 
     public void OnTriggerExit(Collider other) {
         if(!lookingForPlayer) return;
         
         if (other.CompareTag("Player")) {
-            renderWord.gameObject.SetActive(false);
-            if (Nearest == this) {
-                Nearest = null;
-            }
-
+            InteractionManager.Instance.UnregisterInteractable(this);
         }
     }
 }

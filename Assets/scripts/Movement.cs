@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Movement : MonoBehaviour {
     public float Speed = 3;
@@ -22,8 +24,8 @@ public class Movement : MonoBehaviour {
 
     private void Awake() {
         Player = this;
-        Shader.SetGlobalFloat("_minFog", 15);
-        Shader.SetGlobalFloat("_maxFog", 15.5f);
+        Shader.SetGlobalFloat("_minFog", 20);
+        Shader.SetGlobalFloat("_maxFog", 20.5f);
         Shader.SetGlobalVector(Worldpos, Vector3.zero);
     }
 
@@ -33,9 +35,9 @@ public class Movement : MonoBehaviour {
         CC.enabled = true;
     }
 
+    private bool startedOnCreature = false;
+
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.Q)) Fader.instance.FadeWithFunction(null);
-        
         if (Interacting) return;
         
         if (Input.GetKeyDown(KeyCode.Space)) {
@@ -43,12 +45,21 @@ public class Movement : MonoBehaviour {
                 Creature.Nearest.InteractWith();
             }
         }
-        
+
+        bool mouseDown = Input.GetKeyDown(KeyCode.Mouse0);
         bool isDirectingToMove = Input.GetKey(KeyCode.Mouse0);
         if (isDirectingToMove) {
             Ray ray = Cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 100, GroundLayerMask)) {
-                MoveTowards(hit.point);
+                if ((hit.collider.gameObject.layer == 8 || EventSystem.current.IsPointerOverGameObject()) && mouseDown) {
+                    startedOnCreature = true;
+                    return; 
+                }
+
+                if (mouseDown) startedOnCreature = false;
+
+                if(!startedOnCreature)
+                    MoveTowards(hit.point);
             }
         }
         else {
@@ -66,8 +77,22 @@ public class Movement : MonoBehaviour {
         }
     }
 
+    public void ShowOverhead(string text) {
+        Debug.Log($"texting! {text}");
+        
+        IEnumerator delay() {
+            RenderWord word = RenderWordsPool.Get();
+            word.gameObject.SetActive(true);
+            word.transform.position = transform.position + Vector3.up * 1.5f;
+            word.ShowWord(text);
+            yield return new WaitForSeconds(2.0f);
+            word.gameObject.SetActive(false);
+        }
+        StartCoroutine(delay());
+    }
+
     private void MoveTowards(Vector3 hitpoint) {
-        hitpoint = Vector3.ClampMagnitude(hitpoint, 14);
+        hitpoint = Vector3.ClampMagnitude(hitpoint, 19);
         Vector3 targetPos = Vector3.SmoothDamp(transform.position, hitpoint, ref _vel, Damping, Speed);
         Vector3 torwards = targetPos - transform.position;
         CC.Move(torwards);

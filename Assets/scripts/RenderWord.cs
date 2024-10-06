@@ -24,7 +24,16 @@ public class RenderWord : MonoBehaviour {
     private Transform FollowTrans;
     private Vector3 offset;
 
+    public Vector3 GetMostRightPos() {
+        for (int i = TokenElements.Count - 1; i >= 0; i--) {
+            if (TokenElements[i].gameObject.activeInHierarchy) {
+                return TokenElements[i].transform.position;
+            }
+        }
 
+        return transform.position;
+    }
+    
     public void Shake() {
         Content.DOKill();
         Content.DOShakePosition(.3f, .1f, 30);

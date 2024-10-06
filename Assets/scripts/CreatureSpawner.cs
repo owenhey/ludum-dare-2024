@@ -4,14 +4,14 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class CreatureSpawner : MonoBehaviour {
-    private List<Creature> allCreatures = new();
+    public List<Creature> allCreatures = new();
 
     public List<Transform> spawnZones;
 
     public Creature creatureprefab;
     
     public void Spawn() {
-        int numToSpawn = 30;
+        int numToSpawn = 40;
 
         var copied = new List<Transform>(spawnZones);
 
@@ -30,11 +30,20 @@ public class CreatureSpawner : MonoBehaviour {
             Gizmos.DrawSphere(spawnz.transform.position, 1.5f);
         }
     }
+    
+    public void DestroyAllCreatures() {
+        Movement.Player.CreaturesFollowing.Clear();
+        for (int i = 0; i < allCreatures.Count; i++) {
+            Destroy(allCreatures[i].gameObject);
+            allCreatures.RemoveAt(i);
+            i--;
+        }
+    }
 
     public void DestroyUncollectedCreatures() {
         for (int i = 0; i < allCreatures.Count; i++) {
             if (allCreatures[i].FollowTarget == null) {
-                Destroy(allCreatures[i]);
+                Destroy(allCreatures[i].gameObject);
                 allCreatures.RemoveAt(i);
                 i--;
             }

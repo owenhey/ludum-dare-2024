@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RemoveCreature : MonoBehaviour {
     public Camera Cam;
@@ -15,8 +16,9 @@ public class RemoveCreature : MonoBehaviour {
             Ray ray = Cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 100, CreatureLayerMask)) {
                 var creature = hit.collider.GetComponentInParent<Creature>();
-
-                creature.StopFollowing();
+                bool clickingUI = EventSystem.current.IsPointerOverGameObject();
+                if(!clickingUI)
+                    creature.StopFollowing();
             }
         }
     }

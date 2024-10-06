@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
 
@@ -16,14 +18,58 @@ public class GameManager : MonoBehaviour {
     
     private bool typing = false;
 
+    public GameObject gameUI;
+    public GameObject wordSelectUI;
+    public GameObject titleUI;
+
+    public PanningCams panning;
+    
     private RenderWord availableWord;
     private RenderWord typedWord;
+    private RenderWord enter;
+
+    public TextMeshProUGUI timerText;
+    private float StartTime;
+
+    private bool timing = false;
+
+    public static GameManager Instance;
 
     private List<Creature> creatures;
 
     public static int LettersNotUsed = 0;
 
-    public void StartGame() {
+    public static string GAMETYPE = "FREEPLAY";
+
+    private void Awake() {
+        Instance = this;
+    }
+
+    private void Start() {
+        Application.targetFrameRate = 60;
+        GoTitle();
+    }
+
+    public void GoTitle() {
+        Movement.Interacting = true;
+        
+        gameUI.gameObject.SetActive(false);
+        wordSelectUI.gameObject.SetActive(false);
+        titleUI.gameObject.SetActive(true);
+        
+        CreatureSpawner.DestroyAllCreatures();
+        CreatureSpawner.Spawn();
+        panning.gameObject.SetActive(true);
+    }
+    
+    public void StartGame(int type) {
+        if (type == 0) {
+            GAMETYPE = "TIMED";
+        }
+        else {
+            GAMETYPE = "FREEPLAY";
+        }
+        
         Movement.Interacting = true;
         typing = false;
         Fader.instance.FadeWithFunction(StartGameLogic);
@@ -32,9 +78,21 @@ public class GameManager : MonoBehaviour {
 
     private void StartGameLogic() {
         Movement.Interacting = false;
-        
+        CreatureSpawner.DestroyAllCreatures();
         movement.Warp(Vector3.zero);
         movement.CreaturesFollowing.Clear();
+        panning.gameObject.SetActive(false);
+        timing = true;
+
+        timing = GAMETYPE == "TIMED";
+        if (timing) {
+            StartTime = Time.time;
+        }
+        timerText.gameObject.SetActive(timing);
+        
+        gameUI.gameObject.SetActive(true);
+        wordSelectUI.gameObject.SetActive(false);
+        titleUI.gameObject.SetActive(false);
         
         // Make some creatures to start the game
         int numCreatures = 2;
@@ -42,12 +100,20 @@ public class GameManager : MonoBehaviour {
             var newcreature = Instantiate(CreaturePrefab, -Vector3.forward * (i + 1), quaternion.identity);
             newcreature.FollowPlayer();
             newcreature.genType = i == 0 ? CharGenType.Vowel : CharGenType.Consonant;
+            newcreature.CanRelease = false;
+            CreatureSpawner.allCreatures.Add(newcreature);
         }
         
         CreatureSpawner.Spawn();
     }
 
     public void FinishCollection() {
+        if (movement.CreaturesFollowing.Count < 4) {
+            movement.ShowOverhead("need four!");
+            return;
+        }
+
+        timing = false;
         Movement.Interacting = true;
         typing = false;
         Fader.instance.FadeWithFunction(SwitchToMakingWord);
@@ -58,6 +124,10 @@ public class GameManager : MonoBehaviour {
         typing = false;
         movement.Warp(Vector3.zero);
         LettersNotUsed = 0;
+        
+        gameUI.gameObject.SetActive(false);
+        wordSelectUI.gameObject.SetActive(true);
+        titleUI.gameObject.SetActive(false);
 
         var creaturesFollowing = movement.CreaturesFollowing;
 
@@ -106,16 +176,51 @@ public class GameManager : MonoBehaviour {
         typedWord.gameObject.SetActive(true);
         typedWord.transform.position = Vector3.up * 2.5f;
 
+        enter = RenderWordsPool.Get();
+        enter.transform.position = Vector3.up * 10;
+        enter.ShowWord("enter", false);
+        enter.gameObject.SetActive(true);
+
         typing = true;
         currentEntered = "";
         
         RefreshShowing();
     }
 
+    private IEnumerator FailedC() {
+        movement.ShowOverhead("needed four!");
+        yield return new WaitForSeconds(2.0f);
+        Fader.instance.FadeWithFunction(GoTitle);
+    }
+
     private string currentEntered = "";
     private string availableLetters = "";
     private string collectedLetters = "";
     private void Update() {
+        if (timing) {
+            int totalSeconds = 20;
+            int secondsElapsed = (int)(Time.time - StartTime);
+            int secondsLeft = Mathf.Max(0, totalSeconds - secondsElapsed);
+            
+            int minutes = secondsLeft / 60;
+            int remainingSeconds = secondsLeft % 60;
+    
+            timerText.text = string.Format("{0}:{1:00}", minutes, remainingSeconds);
+            
+            if (secondsElapsed > totalSeconds) {
+                timing = false;
+                Movement.Interacting = true;
+                if (movement.CreaturesFollowing.Count < 4) {
+                    StartCoroutine(FailedC());
+                    return;
+                }
+                else {
+                    FinishCollection();
+                }
+                return;
+            }
+        }
+        
         if (!typing) return;
         
         char entered = '!';
@@ -161,18 +266,20 @@ public class GameManager : MonoBehaviour {
         }
 
         if (entered == 'E') {
-            if (currentEntered.Length != collectedLetters.Length) {
+            if (currentEntered.Length < 4) {
                 availableWord.Shake();
                 return;
             }
             
             bool isWord = Words.Instance.GetRarity(currentEntered) != -1;
             if (!isWord) {
-                availableWord.Shake();
+                typedWord.Shake();
                 return;
             }
 
             typing = false;
+            LettersNotUsed = availableLetters.Length;
+            
 
             StartCoroutine(EndGame());
             
@@ -198,10 +305,15 @@ public class GameManager : MonoBehaviour {
         }
         typedWord.ShowWord(currentEntered);
 
+        bool showEnter = currentEntered.Length >= 4;
+        Vector3 showPos = typedWord.GetMostRightPos() + Camera.main.transform.right;
+        enter.transform.position = showEnter ? showPos : Vector3.up * 10;
+        enter.ShowWord("enter", false);
+
         if (currentEntered.Length == collectedLetters.Length) {
             bool isWord = Words.Instance.GetRarity(currentEntered) != -1;
             if (isWord) {
-                availableWord.ShowWord("press enter!", false);
+                availableWord.ShowWord("", false);
             }
             else {
                 availableWord.ShowWord("word not known", false);
@@ -224,12 +336,31 @@ public class GameManager : MonoBehaviour {
         availableWord.ShowWord(tokens.ToArray());
     }
 
+    public void GiveUp() {
+        if (!typing) return;
+        typing = false;
+
+        Fader.instance.FadeWithFunction(GoTitle);
+    }
+
+    public void GiveUpDuringGame() {
+        CreatureSpawner.DestroyAllCreatures();
+        Movement.Interacting = true;
+        gameUI.SetActive(false);
+        timing = false;
+        Fader.instance.FadeWithFunction(GoTitle);
+    }
+
     private IEnumerator EndGame() {
         LettersNotUsed = collectedLetters.Length - currentEntered.Length;
         availableWord.gameObject.SetActive(false);
+        enter.gameObject.SetActive(false);
+        
+        wordSelectUI.SetActive(false);
+        
         // make all the creatures hop
         for (int i = 0; i < creatures.Count; i++) {
-            yield return new WaitForSeconds(.25f);
+            yield return new WaitForSeconds(Random.Range(.05f, .15f));
             creatures[i].LitteHop();
         }
         

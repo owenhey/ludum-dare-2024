@@ -12,14 +12,16 @@ public class CreatureMinigame : MonoBehaviour {
 
     private RenderWord _renderWord;
 
-    public void StartMinigame(RenderWord renderWord) {
-        _renderWord = renderWord;
+    public void StartMinigame() {
+        _renderWord = RenderWordsPool.Get();
+        _renderWord.gameObject.SetActive(true);
+        _renderWord.transform.position = Creature.GetWordDisplayPosition();
         Movement.Interacting = true;
         StartCoroutine(Minigame());
     }
 
     private IEnumerator Minigame() {
-        int numWords = 3;
+        int numWords = 1;
         for (int i = 0; i < numWords; i++) {
             currentWord = GenerateWord();
             currentIndex = 0;
@@ -125,6 +127,5 @@ public class CreatureMinigame : MonoBehaviour {
         Movement.Interacting = false;
         _renderWord.gameObject.SetActive(false);
         Creature.lookingForPlayer = true;
-        Creature.ForceNearest();
     }
 }
