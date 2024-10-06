@@ -102,9 +102,15 @@ public class GameManager : MonoBehaviour {
             newcreature.genType = i == 0 ? CharGenType.Vowel : CharGenType.Consonant;
             newcreature.CanRelease = false;
             CreatureSpawner.allCreatures.Add(newcreature);
+            StartCoroutine(JumpAfterDelay(newcreature, 1.00f + .15f * i));
         }
         
         CreatureSpawner.Spawn();
+    }
+
+    private IEnumerator JumpAfterDelay(Creature c, float f) {
+        yield return new WaitForSeconds(f);
+        c.LitteHop();
     }
 
     public void FinishCollection() {
@@ -189,6 +195,7 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator FailedC() {
         movement.ShowOverhead("needed four!");
+        gameUI.gameObject.SetActive(false);
         yield return new WaitForSeconds(2.0f);
         Fader.instance.FadeWithFunction(GoTitle);
     }
@@ -198,7 +205,7 @@ public class GameManager : MonoBehaviour {
     private string collectedLetters = "";
     private void Update() {
         if (timing) {
-            int totalSeconds = 20;
+            int totalSeconds = 120;
             int secondsElapsed = (int)(Time.time - StartTime);
             int secondsLeft = Mathf.Max(0, totalSeconds - secondsElapsed);
             
@@ -344,7 +351,6 @@ public class GameManager : MonoBehaviour {
     }
 
     public void GiveUpDuringGame() {
-        CreatureSpawner.DestroyAllCreatures();
         Movement.Interacting = true;
         gameUI.SetActive(false);
         timing = false;
