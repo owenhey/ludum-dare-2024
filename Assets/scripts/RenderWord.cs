@@ -35,6 +35,7 @@ public class RenderWord : MonoBehaviour {
     }
     
     public void Shake() {
+        Sound.I.PlayNo();
         Content.DOKill();
         Content.DOShakePosition(.3f, .1f, 30);
     }
@@ -93,8 +94,10 @@ public class RenderWord : MonoBehaviour {
             TokenElements[i].ShowLetter(tokens[i].C);
             TokenElements[i].ShowColor(tokens[i].Color);
             TokenElements[i].transform.localScale = Vector3.one * .03f;
-            if(tokens[i].Animate)
+            if(tokens[i].Animate) {
+                Sound.I.PlayPop((i + 1) * .05f);
                 TokenElements[i].transform.DOScale(.03f, .1f).SetDelay((i + 1) * .05f).From(0);
+            }
         }
 
         SR.size = new Vector2(SpaceBetween * tokens.Length + .5f, SR.size.y);

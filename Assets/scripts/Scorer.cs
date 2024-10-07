@@ -58,7 +58,7 @@ public class Scorer {
         bool palindrome = word.SequenceEqual(word.Reverse());
         ret.palindromeScore = palindrome ? (word.Length * 25) : 0;
 
-        ret.useAllLettersScore = (GameManager.LettersNotUsed * -35) + 25;
+        ret.useAllLettersScore = (GameManager.LettersNotUsed * -20) + 25;
 
         return ret;
     }

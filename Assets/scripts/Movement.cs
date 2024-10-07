@@ -37,6 +37,9 @@ public class Movement : MonoBehaviour {
 
     private bool startedOnCreature = false;
 
+    private float distanceMoved = 0;
+    private int lastMoved = 0;
+
     private void Update() {
         if (Interacting) return;
         
@@ -95,6 +98,11 @@ public class Movement : MonoBehaviour {
         hitpoint = Vector3.ClampMagnitude(hitpoint, 19);
         Vector3 targetPos = Vector3.SmoothDamp(transform.position, hitpoint, ref _vel, Damping, Speed);
         Vector3 torwards = targetPos - transform.position;
+        distanceMoved += torwards.magnitude;
+        if ((int)distanceMoved > lastMoved) {
+            lastMoved = (int)distanceMoved;
+            Sound.I.PlayFootstep();
+        }
         CC.Move(torwards);
     }
 }

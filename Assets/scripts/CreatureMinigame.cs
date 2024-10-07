@@ -13,6 +13,8 @@ public class CreatureMinigame : MonoBehaviour {
     private RenderWord _renderWord;
 
     public void StartMinigame() {
+        Sound.I.PlayYes();
+        
         _renderWord = RenderWordsPool.Get();
         _renderWord.gameObject.SetActive(true);
         _renderWord.transform.position = Creature.GetWordDisplayPosition();
@@ -71,10 +73,12 @@ public class CreatureMinigame : MonoBehaviour {
 
         char targetChar = currentWord[currentIndex];
         if (targetChar != c) {
+            Sound.I.PlayNo();
             WrongInput();
             return;
         }
         else {
+            Sound.I.PlayPop();
             currentIndex++;
             UpdateWithProgress();
         }
@@ -122,6 +126,7 @@ public class CreatureMinigame : MonoBehaviour {
     }
 
     public void CancelMinigame() {
+        Sound.I.PlaySad();
         enabled = false;
         StopAllCoroutines();
         Movement.Interacting = false;

@@ -11,7 +11,7 @@ public class CreatureSpawner : MonoBehaviour {
     public Creature creatureprefab;
     
     public void Spawn() {
-        int numToSpawn = 40;
+        int numToSpawn = 68;
 
         var copied = new List<Transform>(spawnZones);
 
@@ -26,8 +26,8 @@ public class CreatureSpawner : MonoBehaviour {
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red * .5f;
-        foreach (var spawnz in spawnZones) {
-            Gizmos.DrawSphere(spawnz.transform.position, 1.5f);
+        foreach (Transform c in transform) {
+            Gizmos.DrawSphere(c.transform.position, 1.5f);
         }
     }
     

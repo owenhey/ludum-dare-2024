@@ -116,8 +116,12 @@ public class GameManager : MonoBehaviour {
     public void FinishCollection() {
         if (movement.CreaturesFollowing.Count < 4) {
             movement.ShowOverhead("need four!");
+            Sound.I.PlayNo();
             return;
         }
+        
+        Sound.I.PlayHapppy();
+        Sound.I.PlayKnock2();
 
         timing = false;
         Movement.Interacting = true;
@@ -126,6 +130,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SwitchToMakingWord() {
+        
         CreatureSpawner.DestroyUncollectedCreatures();
         typing = false;
         movement.Warp(Vector3.zero);
@@ -197,6 +202,7 @@ public class GameManager : MonoBehaviour {
         movement.ShowOverhead("needed four!");
         gameUI.gameObject.SetActive(false);
         yield return new WaitForSeconds(2.0f);
+        Sound.I.PlaySad();
         Fader.instance.FadeWithFunction(GoTitle);
     }
 
@@ -288,6 +294,7 @@ public class GameManager : MonoBehaviour {
             LettersNotUsed = availableLetters.Length;
             
 
+            Sound.I.PlayHapppy();
             StartCoroutine(EndGame());
             
             return;
@@ -299,6 +306,7 @@ public class GameManager : MonoBehaviour {
         }
 
         currentEntered += entered;
+        Sound.I.PlayPop();
         availableLetters = availableLetters.Remove(availableLetters.IndexOf(entered), 1);
         
         RefreshShowing();
@@ -345,12 +353,18 @@ public class GameManager : MonoBehaviour {
 
     public void GiveUp() {
         if (!typing) return;
+        enter.gameObject.SetActive(false);
+        typedWord.gameObject.SetActive(false);
+        availableWord.gameObject.SetActive(false);
+        
         typing = false;
+        Sound.I.PlaySad();
 
         Fader.instance.FadeWithFunction(GoTitle);
     }
 
     public void GiveUpDuringGame() {
+        Sound.I.PlaySad();
         Movement.Interacting = true;
         gameUI.SetActive(false);
         timing = false;
@@ -359,8 +373,6 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator EndGame() {
         LettersNotUsed = collectedLetters.Length - currentEntered.Length;
-        availableWord.gameObject.SetActive(false);
-        enter.gameObject.SetActive(false);
         
         wordSelectUI.SetActive(false);
         
@@ -373,5 +385,9 @@ public class GameManager : MonoBehaviour {
         // Go to scoring
         yield return new WaitForSeconds(1.0f);
         EndGameScreen.EndGame(currentEntered);
+        
+        enter.gameObject.SetActive(false);
+        typedWord.gameObject.SetActive(false);
+        availableWord.gameObject.SetActive(false);
     }
 }

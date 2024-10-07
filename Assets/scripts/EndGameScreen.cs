@@ -29,9 +29,16 @@ public class EndGameScreen : MonoBehaviour {
 
     private void PlayAgain() {
         playNextButton.interactable = false;
-        Cg.DOFade(0, 1.0f).OnComplete(() => {
-            gameObject.SetActive(false);
-        });
+        Sound.I.PlayKnock2();
+        Sound.I.StopCountUp();
+        
+        Fader.instance.FadeWithFunction(GoToTitle);
+    }
+
+    private void GoToTitle() {
+        GameManager.Instance.GoTitle();
+        content.gameObject.SetActive(false);
+        Cg.alpha = 0;
     }
     
     public void EndGame(string word) {
@@ -47,6 +54,7 @@ public class EndGameScreen : MonoBehaviour {
         ScoreData score = Scorer.Score(word);
 
         yield return new WaitForSeconds(.6f);
+        Sound.I.StartCountUp();
         lengthScore.CountUpTo(score.lengthScore);
         yield return new WaitForSeconds(.6f);
         rarityScore.CountUpTo(score.rarityScore);
@@ -65,6 +73,7 @@ public class EndGameScreen : MonoBehaviour {
         yield return new WaitForSeconds(.6f);
         totalScore.CountUpTo(score.total);
         yield return new WaitForSeconds(1.5f);
+        Sound.I.StopCountUp();
 
         playNextButton.interactable = true;
     }

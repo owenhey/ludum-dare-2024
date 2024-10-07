@@ -43,10 +43,10 @@ public class InteractionManager : MonoBehaviour {
                 index--;
                 continue;
             }
-            float distance = Vector3.SqrMagnitude(Movement.Player.transform.position - interactable.GetPosition());
+            float distance = Vector3.SqrMagnitude(Movement.Player.transform.position - interactables[index].GetPosition());
             if (distance < closestDistance) {
                 closestDistance = distance;
-                closest = interactable;
+                closest = interactables[index];
             }
         }
         if (closest == null) return;

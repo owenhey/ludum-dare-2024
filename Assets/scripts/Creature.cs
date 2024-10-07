@@ -45,7 +45,9 @@ public class Creature : MonoBehaviour, Interactable {
 
     public CharGenType genType;
     public Transform jumper;
-    
+
+    private bool stopmoving = false;
+
     private void Start() {
         Char = GenChar();
         token.ShowLetter(Char);
@@ -113,6 +115,7 @@ public class Creature : MonoBehaviour, Interactable {
             // Choose a random spot nearby
             while (true) {
                 // Make sure no trees are nearby
+                yield return null;
                 var randomCircle = Random.insideUnitCircle;
                 target = startLocation + new Vector3(randomCircle.x, 0, randomCircle.y) * 1.5f;
                 int numHit = Physics.OverlapSphereNonAlloc(target, 1, results, TreesAndRocks);
@@ -122,6 +125,10 @@ public class Creature : MonoBehaviour, Interactable {
 
             hasTarget = true;
         }
+    }
+
+    private void OnDestroy() {
+        InteractionManager.Instance.UnregisterInteractable(this);
     }
 
     public Vector3 GetPosition() => transform.position;
@@ -138,6 +145,7 @@ public class Creature : MonoBehaviour, Interactable {
         if (!hasTarget) return;
         if (Nearest == this) return;
         if (Minigame.enabled) return;
+        if (stopmoving) return;
         
         Vector3 targetPos = Vector3.SmoothDamp(transform.position, target, ref _vel, .15f, speed);
         Vector3 torwards = targetPos - transform.position;
@@ -147,7 +155,7 @@ public class Creature : MonoBehaviour, Interactable {
             hasTarget = false;
         }
     }
-
+    
     private void GoTowardsTarg() {
         Vector3 towardsMe = ((transform.position - FollowTarget.position).normalized) * FollowDistance;
         
@@ -188,6 +196,7 @@ public class Creature : MonoBehaviour, Interactable {
     }
 
     public void LitteHop() {
+        Sound.I.PlayHapppy();
         jumper.DOMoveY(transform.position.y + .5f, .15f).SetEase(Ease.OutQuad).OnComplete(() => {
             jumper.DOMoveY(0, .15f).SetEase(Ease.InQuad);
         });
@@ -211,8 +220,12 @@ public class Creature : MonoBehaviour, Interactable {
     
     public void StopFollowing() {
         if (FollowTarget == null) return;
-        if (!CanRelease) return;
+        if (!CanRelease) {
+            Sound.I.PlayNo();
+            return;
+        }
         
+        Sound.I.PlaySad();
         LitteHop();
 
         SentAwayThisRound = true;
@@ -240,6 +253,7 @@ public class Creature : MonoBehaviour, Interactable {
         if(!lookingForPlayer) return;
         
         if (other.CompareTag("Player")) {
+            stopmoving = true;
             InteractionManager.Instance.RegisterInteractable(this);
         }
     }
@@ -248,6 +262,7 @@ public class Creature : MonoBehaviour, Interactable {
         if(!lookingForPlayer) return;
         
         if (other.CompareTag("Player")) {
+            stopmoving = true;
             InteractionManager.Instance.UnregisterInteractable(this);
         }
     }
